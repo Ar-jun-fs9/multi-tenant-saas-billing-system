@@ -9,7 +9,7 @@ from .serializers import PlanSerializer, SubscriptionSerializer
 import stripe
 from django.conf import settings
 from django.core.mail import send_mail
-from weasyprint import HTML
+# from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 from io import BytesIO
 import os
@@ -134,21 +134,16 @@ class DownloadInvoiceView(APIView):
     def get(self, request, subscription_id):
         try:
             subscription = Subscription.objects.get(
-                id=subscription_id,
-                organization=request.user.organization
+                id=subscription_id, organization=request.user.organization
             )
         except Subscription.DoesNotExist:
             return Response({"error": "Subscription not found"}, status=404)
 
         template = "invoice_template.html"
-
         try:
-            html_string = render_to_string(
-                template,
-                {"subscription": subscription}
-            )
-        except Exception:
-            html_string = f"""
+            html = render_to_string(template, {"subscription": subscription})
+        except:
+            html = f"""
             <h2>Invoice for {subscription.organization.name}</h2>
             <p>Plan: {subscription.plan.name}</p>
             <p>Amount: ${subscription.plan.price}</p>
@@ -156,21 +151,12 @@ class DownloadInvoiceView(APIView):
             <p>Date: {subscription.start_date}</p>
             """
 
-        try:
-            pdf_file = HTML(string=html_string).write_pdf()
+        # result = BytesIO()
+        # pisa_status = pisa.CreatePDF(html, dest=result)
+        # if pisa_status.err:
+        #     return Response({"error": "PDF generation failed"}, status=500)
 
-            response = HttpResponse(
-                pdf_file,
-                content_type="application/pdf"
-            )
-            response["Content-Disposition"] = f'attachment; filename="invoice_{subscription.id}.pdf"'
-            return response
-
-        except Exception as e:
-            return Response(
-                {"error": "PDF generation failed", "details": str(e)},
-                status=500
-            )
+        # return HttpResponse(result.getvalue(), content_type="application/pdf")
 
 
 class AdminDashboardView(generics.RetrieveAPIView):

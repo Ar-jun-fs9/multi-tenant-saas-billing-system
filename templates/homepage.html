@@ -297,172 +297,162 @@
 
     <!-- API Endpoints -->
     <section id="endpoints" class="py-20">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
-        API Endpoints
-      </h2>
-      <p class="text-slate-600">
-        RESTful endpoints for full billing control
-      </p>
-    </div>
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
+            API Endpoints
+          </h2>
+          <p class="text-slate-600">
+            RESTful endpoints for full billing control
+          </p>
+        </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-brand-500">Method</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-brand-500">Endpoint</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-brand-500">Description</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-brand-500">Auth</th>
-            </tr>
-          </thead>
-
-          <tbody class="divide-y divide-gray-100">
-
-            <!-- PUBLIC -->
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/</td>
-              <td class="px-6 py-4 text-slate-600">Home page</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/success/</td>
-              <td class="px-6 py-4 text-slate-600">Payment success page</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/cancel/</td>
-              <td class="px-6 py-4 text-slate-600">Payment cancel page</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/organization/register/</td>
-              <td class="px-6 py-4 text-slate-600">Create organization</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/user/register/</td>
-              <td class="px-6 py-4 text-slate-600">Register user</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/token/</td>
-              <td class="px-6 py-4 text-slate-600">Get JWT token</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/token/refresh/</td>
-              <td class="px-6 py-4 text-slate-600">Refresh JWT token</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/stripe/webhook/</td>
-              <td class="px-6 py-4 text-slate-600">Stripe webhook handler</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">No</td>
-            </tr>
-
-            <!-- PROTECTED -->
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/plans/</td>
-              <td class="px-6 py-4 text-slate-600">List subscription plans</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/subscribe/</td>
-              <td class="px-6 py-4 text-slate-600">Create Stripe checkout session</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/subscription/cancel/</td>
-              <td class="px-6 py-4 text-slate-600">Cancel subscription</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/subscription/update/</td>
-              <td class="px-6 py-4 text-slate-600">Upgrade/downgrade plan</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/my-users/</td>
-              <td class="px-6 py-4 text-slate-600">List organization users</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/invoice/{id}/</td>
-              <td class="px-6 py-4 text-slate-600">Download invoice PDF</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">GET</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/admin-dashboard/</td>
-              <td class="px-6 py-4 text-slate-600">Admin dashboard</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded font-medium">PATCH</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/user/update/</td>
-              <td class="px-6 py-4 text-slate-600">Update user profile</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded font-medium">DELETE</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/user/delete/</td>
-              <td class="px-6 py-4 text-slate-600">Soft delete user</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/email/subscription-created/</td>
-              <td class="px-6 py-4 text-slate-600">Send subscription confirmation email</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded font-medium">POST</span></td>
-              <td class="px-6 py-4 font-mono text-sm text-brand-600">/api/email/payment-success/</td>
-              <td class="px-6 py-4 text-slate-600">Send payment success email</td>
-              <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
-            </tr>
-
-          </tbody>
-        </table>
+        <div
+          class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+        >
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-brand-500"
+                  >
+                    Method
+                  </th>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-brand-500"
+                  >
+                    Endpoint
+                  </th>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-brand-500"
+                  >
+                    Description
+                  </th>
+                  <th
+                    class="px-6 py-4 text-left text-sm font-semibold text-brand-500"
+                  >
+                    Auth
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium"
+                      >POST</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/organization/register/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">Create organization</td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">No</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium"
+                      >POST</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/user/register/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">Register user</td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">No</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium"
+                      >GET</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/plans/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">
+                    List subscription plans
+                  </td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium"
+                      >POST</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/subscribe/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">
+                    Create checkout session
+                  </td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium"
+                      >POST</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/subscription/cancel/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">Cancel subscription</td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium"
+                      >POST</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/subscription/update/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">
+                    Upgrade/downgrade plan
+                  </td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded font-medium"
+                      >GET</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/invoice/{id}/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">Download invoice PDF</td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4">
+                    <span
+                      class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded font-medium"
+                      >DELETE</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-mono text-sm text-brand-600">
+                    /api/user/delete/
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">Delete user (soft)</td>
+                  <td class="px-6 py-4 text-slate-400 text-sm">JWT</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <!-- Testing -->
     <section id="test" class="py-20 bg-gray-50">
