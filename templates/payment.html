@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% if success %}Payment Successful{% else %}Payment Cancelled{% endif %} |
+      SaaS Billing
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              space: ["Space Grotesk", "sans-serif"],
+            },
+            colors: {
+              brand: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+              },
+              dark: "#0f172a",
+              muted: "#64748b",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Space Grotesk", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="font-space bg-dark min-h-screen flex items-center justify-center"
+  >
+    <div class="w-full max-w-md px-6">
+      <!-- Success Card -->
+      {% if success %}
+      <div
+        class="bg-white/5 border border-green-500/20 rounded-2xl p-8 text-center glow-success"
+      >
+        <div
+          class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+        >
+          <i class="fas fa-check text-green-400 text-3xl"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white mb-3">Payment Successful!</h1>
+
+        <p class="text-gray-400 mb-8">
+          Thank you for your subscription. Your plan has been activated and you
+          will receive a confirmation email shortly.
+        </p>
+
+        <div class="bg-white/5 rounded-xl p-4 mb-8 text-left">
+          <div
+            class="flex justify-between items-center py-2 border-b border-white/5"
+          >
+            <span class="text-gray-500 text-sm">Status</span>
+            <span class="text-green-400 text-sm font-medium">Active</span>
+          </div>
+          <div
+            class="flex justify-between items-center py-2 border-b border-white/5"
+          >
+            <span class="text-gray-500 text-sm">Plan</span>
+            <span class="text-white text-sm">Pro Plan</span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-gray-500 text-sm">Amount</span>
+            <span class="text-white text-sm">$30/mo</span>
+          </div>
+        </div>
+
+        <a
+          href="http://localhost:8000/api/plans/"
+          class="inline-flex items-center justify-center w-full bg-brand-500 text-white py-3 rounded-lg font-semibold hover:bg-brand-600 transition"
+        >
+          <i class="fas fa-rocket mr-2"></i>Go to Dashboard
+        </a>
+      </div>
+      {% else %}
+      <!-- Cancel Card -->
+      <div
+        class="bg-white/5 border border-red-500/20 rounded-2xl p-8 text-center"
+      >
+        <div
+          class="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+        >
+          <i class="fas fa-times text-red-400 text-3xl"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white mb-3">Payment Cancelled</h1>
+
+        <p class="text-gray-400 mb-8">
+          Your payment was cancelled. No charges have been made to your account.
+          You can try again anytime.
+        </p>
+
+        <div class="bg-white/5 rounded-xl p-4 mb-8 text-left">
+          <div
+            class="flex justify-between items-center py-2 border-b border-white/5"
+          >
+            <span class="text-gray-500 text-sm">Status</span>
+            <span class="text-red-400 text-sm font-medium">Cancelled</span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-gray-500 text-sm">Session</span>
+            <span class="text-gray-400 text-sm">Not completed</span>
+          </div>
+        </div>
+
+        <a
+          href="http://localhost:8000/api/subscribe/"
+          class="inline-flex items-center justify-center w-full bg-brand-500 text-white py-3 rounded-lg font-semibold hover:bg-brand-600 transition"
+        >
+          <i class="fas fa-redo mr-2"></i>Try Again
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Back Link -->
+      <div class="text-center mt-6">
+        <a
+          href="http://localhost:8000/"
+          class="text-gray-400 text-sm hover:text-brand-400 transition"
+        >
+          <i class="fas fa-arrow-left mr-1"></i>Back to Home
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
