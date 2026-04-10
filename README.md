@@ -39,24 +39,34 @@ This project provides a complete billing solution for SaaS companies to manage s
 
 ### API Endpoints
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/organization/register/` | Create organization | No |
-| POST | `/api/user/register/` | Register user | No |
-| POST | `/api/token/` | Get JWT token | No |
-| POST | `/api/token/refresh/` | Refresh token | No |
-| GET | `/api/plans/` | List subscription plans | JWT |
-| POST | `/api/subscribe/` | Create Stripe checkout | JWT |
-| POST | `/api/subscription/cancel/` | Cancel subscription | JWT |
-| POST | `/api/subscription/update/` | Upgrade/downgrade plan | JWT |
-| GET | `/api/my-users/` | List organization users | JWT |
-| GET | `/api/invoice/{id}/` | Download PDF invoice | JWT |
-| GET | `/api/admin-dashboard/` | Admin dashboard | JWT |
-| PATCH | `/api/user/update/` | Update user profile | JWT |
-| DELETE | `/api/user/delete/` | Soft delete user | JWT |
-| POST | `/api/email/subscription-created/` | Send confirmation | JWT |
-| POST | `/api/email/payment-success/` | Send payment email | JWT |
-| POST | `/api/stripe/webhook/` | Stripe webhooks | No |
+#### Public Endpoints (No Authentication Required)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Home page |
+| GET | `/success/` | Payment success page |
+| GET | `/cancel/` | Payment cancel page |
+| POST | `/api/organization/register/` | Create organization |
+| POST | `/api/user/register/` | Register user |
+| POST | `/api/token/` | Get JWT token |
+| POST | `/api/token/refresh/` | Refresh JWT token |
+| POST | `/api/stripe/webhook/` | Stripe webhook handler |
+
+#### Protected Endpoints (JWT Authentication Required)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/plans/` | List subscription plans |
+| POST | `/api/subscribe/` | Create Stripe checkout session |
+| POST | `/api/subscription/cancel/` | Cancel subscription |
+| POST | `/api/subscription/update/` | Upgrade/downgrade plan |
+| GET | `/api/my-users/` | List organization users |
+| GET | `/api/invoice/{id}/` | Download PDF invoice |
+| GET | `/api/admin-dashboard/` | Admin dashboard |
+| PATCH | `/api/user/update/` | Update user profile |
+| DELETE | `/api/user/delete/` | Soft delete user |
+| POST | `/api/email/subscription-created/` | Send subscription confirmation email |
+| POST | `/api/email/payment-success/` | Send payment success email |
 
 ## Tech Stack
 
