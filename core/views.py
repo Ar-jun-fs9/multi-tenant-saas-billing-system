@@ -36,11 +36,11 @@ class OrganizationCreateView(generics.CreateAPIView):
             organization.stripe_customer_id = stripe_customer.id
             organization.save()
 
-            print("✅ Stripe customer created:", stripe_customer.id)
-            print("🏢 Organization updated with Stripe ID")
+            print("Stripe customer created:", stripe_customer.id)
+            print("Organization updated with Stripe ID")
 
         except Exception as e:
-            print("❌ Stripe customer creation FAILED:", str(e))
+            print("Stripe customer creation FAILED:", str(e))
 
 
 class UserRegisterView(generics.CreateAPIView):
@@ -68,13 +68,13 @@ class SubscribeView(APIView):
         if not plan_id:
             return Response({"error": "plan_id is required"}, status=400)
 
-        # 🔍 Validate plan
+        #  Validate plan
         try:
             plan = Plan.objects.get(id=int(plan_id))
         except (Plan.DoesNotExist, ValueError):
             return Response({"error": "Invalid plan_id"}, status=404)
 
-        # 🔥 Ensure Stripe customer exists
+        #  Ensure Stripe customer exists
         try:
             if not org.stripe_customer_id:
                 customer = stripe.Customer.create(
@@ -89,7 +89,7 @@ class SubscribeView(APIView):
                 status=500,
             )
 
-        # 💳 Create Stripe Checkout Session
+        #  Create Stripe Checkout Session
         try:
             checkout_session = stripe.checkout.Session.create(
                 customer=org.stripe_customer_id,
@@ -195,14 +195,12 @@ class StripeWebhookView(APIView):
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
         except Exception as e:
-            print("❌ SIGNATURE ERROR:", str(e))
+            print(" SIGNATURE ERROR:", str(e))
             return Response(status=400)
 
         print("🔥 EVENT:", event["type"])
 
-        # =====================================================
         # ONLY RELIABLE EVENT FOR SUBSCRIPTIONS
-        # =====================================================
         if event["type"] == "customer.subscription.created":
             sub = event["data"]["object"]
 
@@ -210,8 +208,8 @@ class StripeWebhookView(APIView):
             subscription_id = sub["id"]
             status = sub["status"]
 
-            print("👤 CUSTOMER:", customer_id)
-            print("📦 SUB:", subscription_id)
+            print(" CUSTOMER:", customer_id)
+            print(" SUB:", subscription_id)
 
             try:
                 org = Organization.objects.get(stripe_customer_id=customer_id)
@@ -225,10 +223,10 @@ class StripeWebhookView(APIView):
                     defaults={"organization": org, "plan": plan, "status": status},
                 )
 
-                print("✅ SUBSCRIPTION SAVED:", subscription.id)
+                print(" SUBSCRIPTION SAVED:", subscription.id)
 
             except Exception as e:
-                print("❌ DB ERROR:", str(e))
+                print(" DB ERROR:", str(e))
 
         # Optional safety updates
         elif event["type"] == "invoice.payment_succeeded":
