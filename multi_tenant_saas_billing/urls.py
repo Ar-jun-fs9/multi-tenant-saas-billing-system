@@ -19,19 +19,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'homepage.html')
 
 def success(request):
-    return HttpResponse("Payment successful 🎉 Subscription will be activated shortly.")
+    return render(request, 'payment.html', {'success': True})
 
 def cancel(request):
-    return HttpResponse("Payment cancelled ❌")
+    return render(request, 'payment.html', {'success': False})
 
 urlpatterns = [
     path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
-    path('success/', success),
-    path('cancel/', cancel),
+    path('', home, name='home'),
+    path('success/', success, name='success'),
+    path('cancel/', cancel, name='cancel'),
 ]
 
 

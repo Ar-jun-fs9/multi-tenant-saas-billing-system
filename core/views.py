@@ -15,10 +15,12 @@ from io import BytesIO
 import os
 import requests
 from .stripe_utils import stripe
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 
 def Home(request):
-    return HttpResponse("Welcome to the Multi-Tenant SaaS Billing System!")
+    from django.shortcuts import render
+    return render(request, 'homepage.html')
 
 
 class OrganizationCreateView(generics.CreateAPIView):
@@ -242,3 +244,224 @@ class StripeWebhookView(APIView):
             )
 
         return Response(status=200)
+
+
+class CancelSubscriptionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        org = request.user.organization
+
+        if not org:
+            return Response({"error": "User has no organization"}, status=400)
+
+        try:
+            subscription = Subscription.objects.get(
+                organization=org, status='active'
+            )
+        except Subscription.DoesNotExist:
+            return Response({"error": "No active subscription found"}, status=404)
+
+        try:
+            stripe.Subscription.cancel(subscription.stripe_subscription_id)
+            subscription.status = 'canceled'
+            subscription.save()
+
+            send_mail(
+                'Subscription Cancelled',
+                f'Your subscription for {org.name} has been cancelled.',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Subscription cancelled successfully"})
+
+        except Exception as e:
+            return Response(
+                {"error": "Failed to cancel subscription", "details": str(e)},
+                status=500
+            )
+
+
+class UpdateSubscriptionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        org = request.user.organization
+
+        if not org:
+            return Response({"error": "User has no organization"}, status=400)
+
+        new_plan_id = request.data.get("plan_id")
+
+        if not new_plan_id:
+            return Response({"error": "plan_id is required"}, status=400)
+
+        try:
+            new_plan = Plan.objects.get(id=int(new_plan_id))
+        except (Plan.DoesNotExist, ValueError):
+            return Response({"error": "Invalid plan_id"}, status=404)
+
+        try:
+            existing_sub = Subscription.objects.get(
+                organization=org, status='active'
+            )
+        except Subscription.DoesNotExist:
+            return Response({"error": "No active subscription found"}, status=404)
+
+        try:
+            stripe.Subscription.modify(
+                existing_sub.stripe_subscription_id,
+                items=[{
+                    "price": new_plan.stripe_price_id,
+                }]
+            )
+
+            existing_sub.plan = new_plan
+            existing_sub.save()
+
+            send_mail(
+                'Subscription Updated',
+                f'Your subscription has been updated to {new_plan.name}.',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
+            )
+
+            return Response({
+                "message": "Subscription updated successfully",
+                "new_plan": new_plan.name
+            })
+
+        except Exception as e:
+            return Response(
+                {"error": "Failed to update subscription", "details": str(e)},
+                status=500
+            )
+
+
+class UserUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+
+        email = request.data.get("email")
+        first_name = request.data.get("first_name")
+        last_name = request.data.get("last_name")
+
+        if email:
+            user.email = email
+
+        if first_name:
+            user.first_name = first_name
+
+        if last_name:
+            user.last_name = last_name
+
+        user.save()
+
+        return Response({
+            "message": "Profile updated successfully",
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        })
+
+
+class SendSubscriptionCreatedEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        org = request.user.organization
+
+        if not org:
+            return Response({"error": "User has no organization"}, status=400)
+
+        try:
+            subscription = Subscription.objects.get(
+                organization=org, status='active'
+            )
+        except Subscription.DoesNotExist:
+            return Response({"error": "No active subscription found"}, status=404)
+
+        try:
+            send_mail(
+                'Thank You for Your Subscription',
+                f'Hello {request.user.username},\n\n'
+                f'Your subscription to {subscription.plan.name} has been activated.\n'
+                f'Amount: ${subscription.plan.price}/month\n'
+                f'Status: {subscription.status}',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Email sent successfully"})
+
+        except Exception as e:
+            return Response(
+                {"error": "Failed to send email", "details": str(e)},
+                status=500
+            )
+
+
+class SendPaymentSuccessEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        org = request.user.organization
+
+        if not org:
+            return Response({"error": "User has no organization"}, status=400)
+
+        try:
+            subscription = Subscription.objects.get(organization=org)
+        except Subscription.DoesNotExist:
+            return Response({"error": "No subscription found"}, status=404)
+
+        try:
+            send_mail(
+                'Payment Successful',
+                f'Hello {request.user.username},\n\n'
+                f'We received your payment of ${subscription.plan.price}.\n'
+                f'Your subscription is now active.',
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Payment confirmation email sent"})
+
+        except Exception as e:
+            return Response(
+                {"error": "Failed to send email", "details": str(e)},
+                status=500
+            )
+
+
+class UserDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        user_id = request.data.get("user_id")
+
+        if not user_id:
+            return Response({"error": "user_id is required"}, status=400)
+
+        try:
+            user = User.objects.get(id=int(user_id))
+        except (User.DoesNotExist, ValueError):
+            return Response({"error": "User not found"}, status=404)
+
+        if request.user.organization != user.organization:
+            return Response({"error": "Cannot delete users from other organization"}, status=403)
+
+        if request.user.role != 'admin' and request.user.id != user.id:
+            return Response({"error": "Only admins can delete other users"}, status=403)
+
+        user.is_active = False
+        user.save()
+
+        return Response({"message": "User deleted successfully", "user_id": user_id})

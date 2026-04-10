@@ -7,7 +7,13 @@ from .views import (
     MyUsersView,
     DownloadInvoiceView,
     AdminDashboardView,
-    StripeWebhookView
+    StripeWebhookView,
+    CancelSubscriptionView,
+    UpdateSubscriptionView,
+    UserUpdateView,
+    SendSubscriptionCreatedEmailView,
+    SendPaymentSuccessEmailView,
+    UserDeleteView
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -22,5 +28,11 @@ urlpatterns = [
     path('invoice/<int:subscription_id>/', DownloadInvoiceView.as_view(), name='download-invoice'),
     path('admin-dashboard/', AdminDashboardView.as_view(), name='admin-dashboard'),
     path('stripe/webhook/', StripeWebhookView.as_view(), name='stripe-webhook'),
+    path('subscription/cancel/', CancelSubscriptionView.as_view(), name='cancel-subscription'),
+    path('subscription/update/', UpdateSubscriptionView.as_view(), name='update-subscription'),
+    path('user/update/', UserUpdateView.as_view(), name='user-update'),
+    path('user/delete/', UserDeleteView.as_view(), name='user-delete'),
+    path('email/subscription-created/', SendSubscriptionCreatedEmailView.as_view(), name='email-subscription-created'),
+    path('email/payment-success/', SendPaymentSuccessEmailView.as_view(), name='email-payment-success'),
 ]
 
