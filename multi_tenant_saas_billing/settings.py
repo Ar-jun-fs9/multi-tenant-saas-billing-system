@@ -23,11 +23,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    "multi-tenant-saas-billing-system.onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ["*"]  # tighten later in production
 
 
 # APPLICATIONS
@@ -65,6 +61,7 @@ MIDDLEWARE = [
 
 # URL / WSGI
 ROOT_URLCONF = "multi_tenant_saas_billing.urls"
+
 WSGI_APPLICATION = "multi_tenant_saas_billing.wsgi.application"
 
 
@@ -85,12 +82,10 @@ TEMPLATES = [
 ]
 
 
-# DATABASE (Render)
+# DATABASE (Render / Supabase)
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
+        default=os.getenv("DATABASE_URL")
     )
 }
 
@@ -129,18 +124,16 @@ USE_I18N = True
 USE_TZ = True
 
 
-# STATIC FILES (FIXED)
+# STATIC FILES
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
+# WhiteNoise (important for Render)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
-# EMAIL (production)
+# EMAIL (production ready)
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
@@ -151,15 +144,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@saasbilling.com")
 
 
-# SECURITY (IMPORTANT)
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = "DENY"
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-
 # DEFAULT PRIMARY KEY
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
