@@ -2,18 +2,18 @@
 
 # Multi-Tenant SaaS Billing API
 
-<p>
+<p align="center">
   <a href="https://www.djangoproject.com/">
-    <img src="https://img.shields.io/badge/Django-092E20?style=flat&logo=django" alt="Django">
+    <img src="https://img.shields.io/badge/Django-Backend-092E20?style=flat&logo=django&logoColor=white" alt="Django">
   </a>
   <a href="https://www.django-rest-framework.org/">
-    <img src="https://img.shields.io/badge/DRF-white?style=flat&logo=restframework" alt="DRF">
+    <img src="https://img.shields.io/badge/DRF-API-ff1709?style=flat&logo=django&logoColor=white" alt="DRF">
   </a>
   <a href="https://stripe.com/">
-    <img src="https://img.shields.io/badge/Stripe-Integrated-635BFF?style=flat&logo=stripe" alt="Stripe">
+    <img src="https://img.shields.io/badge/Stripe-Payments-635BFF?style=flat&logo=stripe&logoColor=white" alt="Stripe">
   </a>
   <a href="https://www.postgresql.org/">
-    <img src="https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=flat&logo=postgresql" alt="PostgreSQL">
+    <img src="https://img.shields.io/badge/PostgreSQL-Database-336791?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL">
   </a>
 </p>
 
@@ -118,8 +118,7 @@ multi_tenant_saas_billing/
 
 3. **Install dependencies**
    ```bash
-   pip install django djangorestframework djangorestframework-simplejwt
-   pip install stripe xhtml2pdf python-dotenv dj-database-url psycopg2-binary
+   pip install requirements.txt
    ```
 
 4. **Configure environment variables**
@@ -298,9 +297,4 @@ http://localhost:8000/api/stripe/webhook/
 
 MIT License
 
-## Built With
 
-- [Django](https://www.djangoproject.com/)
-- [Django REST Framework](https://www.django-rest-framework.org/)
-- [Stripe](https://stripe.com/)
-- [PostgreSQL](https://www.postgresql.org/)
