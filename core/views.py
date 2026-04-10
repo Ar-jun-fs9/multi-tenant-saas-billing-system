@@ -14,8 +14,7 @@ from django.template.loader import render_to_string
 from io import BytesIO
 import os
 import requests
-from .stripe_utils import stripe 
-
+from .stripe_utils import stripe
 
 
 def Home(request):
@@ -28,14 +27,20 @@ class OrganizationCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         organization = serializer.save()
+
         try:
             stripe_customer = stripe.Customer.create(
-                name=organization.name,
+                name=organization.name, metadata={"organization_id": organization.id}
             )
+
             organization.stripe_customer_id = stripe_customer.id
             organization.save()
+
+            print("✅ Stripe customer created:", stripe_customer.id)
+            print("🏢 Organization updated with Stripe ID")
+
         except Exception as e:
-            pass
+            print("❌ Stripe customer creation FAILED:", str(e))
 
 
 class UserRegisterView(generics.CreateAPIView):
@@ -49,53 +54,64 @@ class PlanListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class SubscribeView(generics.CreateAPIView):
-    serializer_class = SubscriptionSerializer
+class SubscribeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         org = request.user.organization
+
         if not org:
             return Response({"error": "User has no organization"}, status=400)
-        
-        plan_id = request.data.get('plan_id')
+
+        plan_id = request.data.get("plan_id")
+
+        if not plan_id:
+            return Response({"error": "plan_id is required"}, status=400)
+
+        # 🔍 Validate plan
         try:
-            plan = Plan.objects.get(id=plan_id)
-        except Plan.DoesNotExist:
-            return Response({"error": "Plan not found"}, status=404)
+            plan = Plan.objects.get(id=int(plan_id))
+        except (Plan.DoesNotExist, ValueError):
+            return Response({"error": "Invalid plan_id"}, status=404)
 
-        if not org.stripe_customer_id:
-            stripe_customer = stripe.Customer.create(
-                name=org.name,
-            )
-            org.stripe_customer_id = stripe_customer.id
-            org.save()
-
-        stripe_subscription = stripe.Subscription.create(
-            customer=org.stripe_customer_id,
-            items=[{"price": plan.stripe_price_id}],
-            expand=["latest_invoice.payment_intent"]
-        )
-
-        subscription = Subscription.objects.create(
-            organization=org,
-            plan=plan,
-            stripe_subscription_id=stripe_subscription.id,
-            status=stripe_subscription.status
-        )
-
+        # 🔥 Ensure Stripe customer exists
         try:
-            send_mail(
-                "Subscription Created",
-                f"Hi {request.user.username}, your subscription to {plan.name} is now active!",
-                settings.EMAIL_HOST_USER,
-                [request.user.email],
-                fail_silently=False,
+            if not org.stripe_customer_id:
+                customer = stripe.Customer.create(
+                    name=org.name,
+                    email=request.user.email if request.user.email else None,
+                )
+                org.stripe_customer_id = customer.id
+                org.save()
+        except Exception as e:
+            return Response(
+                {"error": "Failed to create Stripe customer", "details": str(e)},
+                status=500,
             )
-        except:
-            pass
 
-        return Response({"subscription_id": subscription.id, "status": subscription.status})
+        # 💳 Create Stripe Checkout Session
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                customer=org.stripe_customer_id,
+                payment_method_types=["card"],
+                mode="subscription",
+                line_items=[
+                    {
+                        "price": plan.stripe_price_id,
+                        "quantity": 1,
+                    }
+                ],
+                success_url="http://localhost:8000/success?session_id={CHECKOUT_SESSION_ID}",
+                cancel_url="http://localhost:8000/cancel",
+            )
+
+            return Response({"checkout_url": checkout_session.url})
+
+        except Exception as e:
+            return Response(
+                {"error": "Stripe checkout session creation failed", "details": str(e)},
+                status=500,
+            )
 
 
 class MyUsersView(APIView):
@@ -115,13 +131,15 @@ class DownloadInvoiceView(APIView):
 
     def get(self, request, subscription_id):
         try:
-            subscription = Subscription.objects.get(id=subscription_id, organization=request.user.organization)
+            subscription = Subscription.objects.get(
+                id=subscription_id, organization=request.user.organization
+            )
         except Subscription.DoesNotExist:
             return Response({"error": "Subscription not found"}, status=404)
 
-        template = 'invoice_template.html'
+        template = "invoice_template.html"
         try:
-            html = render_to_string(template, {'subscription': subscription})
+            html = render_to_string(template, {"subscription": subscription})
         except:
             html = f"""
             <h2>Invoice for {subscription.organization.name}</h2>
@@ -130,13 +148,13 @@ class DownloadInvoiceView(APIView):
             <p>Status: {subscription.status}</p>
             <p>Date: {subscription.start_date}</p>
             """
-        
+
         result = BytesIO()
         pisa_status = pisa.CreatePDF(html, dest=result)
         if pisa_status.err:
             return Response({"error": "PDF generation failed"}, status=500)
-        
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
+
+        return HttpResponse(result.getvalue(), content_type="application/pdf")
 
 
 class AdminDashboardView(generics.RetrieveAPIView):
@@ -154,12 +172,9 @@ class AdminDashboardView(generics.RetrieveAPIView):
             "name": org.name,
             "created_at": org.created_at,
             "subscriptions": [
-                {
-                    "plan": s.plan.name,
-                    "status": s.status,
-                    "start_date": s.start_date
-                } for s in subscriptions
-            ]
+                {"plan": s.plan.name, "status": s.status, "start_date": s.start_date}
+                for s in subscriptions
+            ],
         }
         return Response(data)
 
@@ -167,40 +182,65 @@ class AdminDashboardView(generics.RetrieveAPIView):
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+@method_decorator(csrf_exempt, name="dispatch")
 class StripeWebhookView(APIView):
     permission_classes = []
 
     def post(self, request):
         payload = request.body
-        sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
-        endpoint_secret = os.getenv('STRIPE_WEBHOOK_SECRET', '')
+        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+        endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
         except Exception as e:
+            print("❌ SIGNATURE ERROR:", str(e))
             return Response(status=400)
 
-        if event['type'] == 'invoice.payment_succeeded':
-            subscription_id = event['data']['object']['subscription']
-            try:
-                sub = Subscription.objects.get(stripe_subscription_id=subscription_id)
-                sub.status = 'active'
-                sub.save()
-            except Subscription.DoesNotExist:
-                pass
+        print("🔥 EVENT:", event["type"])
 
-        elif event['type'] == 'invoice.payment_failed':
-            subscription_id = event['data']['object']['subscription']
+        # =====================================================
+        # ONLY RELIABLE EVENT FOR SUBSCRIPTIONS
+        # =====================================================
+        if event["type"] == "customer.subscription.created":
+            sub = event["data"]["object"]
+
+            customer_id = sub["customer"]
+            subscription_id = sub["id"]
+            status = sub["status"]
+
+            print("👤 CUSTOMER:", customer_id)
+            print("📦 SUB:", subscription_id)
+
             try:
-                sub = Subscription.objects.get(stripe_subscription_id=subscription_id)
-                sub.status = 'past_due'
-                sub.save()
-                
-                slack_webhook = os.getenv('SLACK_WEBHOOK_URL')
-                if slack_webhook:
-                    requests.post(slack_webhook, json={"text": f"Payment failed for {sub.organization.name}!"})
-            except Subscription.DoesNotExist:
-                pass
+                org = Organization.objects.get(stripe_customer_id=customer_id)
+
+                # Get price → plan mapping
+                price_id = sub["items"]["data"][0]["price"]["id"]
+                plan = Plan.objects.get(stripe_price_id=price_id)
+
+                subscription, created = Subscription.objects.update_or_create(
+                    stripe_subscription_id=subscription_id,
+                    defaults={"organization": org, "plan": plan, "status": status},
+                )
+
+                print("✅ SUBSCRIPTION SAVED:", subscription.id)
+
+            except Exception as e:
+                print("❌ DB ERROR:", str(e))
+
+        # Optional safety updates
+        elif event["type"] == "invoice.payment_succeeded":
+            sub_id = event["data"]["object"]["subscription"]
+            Subscription.objects.filter(stripe_subscription_id=sub_id).update(
+                status="active"
+            )
+
+        elif event["type"] == "invoice.payment_failed":
+            sub_id = event["data"]["object"]["subscription"]
+            Subscription.objects.filter(stripe_subscription_id=sub_id).update(
+                status="past_due"
+            )
 
         return Response(status=200)

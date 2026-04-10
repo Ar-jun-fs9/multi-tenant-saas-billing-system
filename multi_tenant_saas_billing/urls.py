@@ -18,12 +18,20 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from core import views
+from django.http import HttpResponse
+
+def success(request):
+    return HttpResponse("Payment successful 🎉 Subscription will be activated shortly.")
+
+def cancel(request):
+    return HttpResponse("Payment cancelled ❌")
 
 urlpatterns = [
-    path('', views.Home, name='home'),
-    path("admin/", admin.site.urls),
+    path('', include('core.urls')),
+    path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
+    path('success/', success),
+    path('cancel/', cancel),
 ]
 
 
