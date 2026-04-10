@@ -1,11 +1,13 @@
+<div align="center">
+
 # Multi-Tenant SaaS Billing API
 
 <p>
   <a href="https://www.djangoproject.com/">
-    <img src="https://img.shields.io/badge/Django-6.0.3-092E20?style=flat&logo=django" alt="Django">
+    <img src="https://img.shields.io/badge/Django-092E20?style=flat&logo=django" alt="Django">
   </a>
   <a href="https://www.django-rest-framework.org/">
-    <img src="https://img.shields.io/badge/DRF-3.17.1-white?style=flat&logo=restframework" alt="DRF">
+    <img src="https://img.shields.io/badge/DRF-white?style=flat&logo=restframework" alt="DRF">
   </a>
   <a href="https://stripe.com/">
     <img src="https://img.shields.io/badge/Stripe-Integrated-635BFF?style=flat&logo=stripe" alt="Stripe">
@@ -15,7 +17,9 @@
   </a>
 </p>
 
-A production-ready Django REST API for multi-tenant SaaS subscription billing with Stripe integration.
+</div>
+
+A stable and reliable Django REST API for multi-tenant SaaS subscription billing with Stripe integration.
 
 ## Overview
 
@@ -100,8 +104,8 @@ multi_tenant_saas_billing/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd multi-tenant-saas-billing
+   git clone https://github.com/Ar-jun-fs9/multi-tenant-saas-billing-system.git
+   cd multi-tenant-saas-billing-system
    ```
 
 2. **Create virtual environment**
