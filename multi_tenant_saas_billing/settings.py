@@ -15,7 +15,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import dj_database_url
 from pathlib import Path
 import os
-import dj_database_url
 from dotenv import load_dotenv
 
 # Load .env file
@@ -86,7 +85,7 @@ WSGI_APPLICATION = "multi_tenant_saas_billing.wsgi.application"
 
 # Database (Supabase PostgreSQL)
 DATABASES = {
-    "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
+    "default": dj_database_url.parse(os.getenv("DATABASE_URL", ""))
 }
 
 # manually added 
