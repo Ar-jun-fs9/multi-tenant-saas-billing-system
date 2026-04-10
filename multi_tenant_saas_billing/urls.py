@@ -20,12 +20,62 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
 from django.shortcuts import render
+from core.models import Subscription, Plan
 
 def home(request):
     return render(request, 'homepage.html')
 
 def success(request):
-    return render(request, 'payment.html', {'success': True})
+    session_id = request.GET.get('session_id')
+    print(f"SUCCESS VIEW - session_id: {session_id}")
+    
+    sub_status = 'active'
+    sub_plan = 'Subscription'
+    sub_amount = '$0.00'
+    
+    if session_id:
+        try:
+            from core.stripe_utils import stripe
+            checkout_session = stripe.checkout.Session.retrieve(session_id)
+            # print(f"Checkout session: {checkout_session.id}, payment_status: {checkout_session.payment_status}")
+            
+            if checkout_session.payment_status == 'paid':
+                sub_id = checkout_session.subscription
+                # print(f"Subscription ID from checkout: {sub_id}")
+                
+                if sub_id:
+                    db_sub = Subscription.objects.filter(stripe_subscription_id=sub_id).first()
+                    if db_sub:
+                        sub_status = db_sub.status
+                        sub_plan = db_sub.plan.name
+                        sub_amount = f"${db_sub.plan.price:.2f}"
+                        print(f"Found in DB: {db_sub.plan.name}")
+                    else:
+                        print("Not found in DB, trying Stripe API...")
+                        stripe_sub = stripe.Subscription.retrieve(sub_id)
+                        price_id = stripe_sub['items']['data'][0]['price']['id']
+                        db_plan = Plan.objects.filter(stripe_price_id=price_id).first()
+                        
+                        if db_plan:
+                            sub_plan = db_plan.name
+                            sub_amount = f"${db_plan.price:.2f}"
+                            print(f"Found via Stripe: {db_plan.name}")
+                        else:
+                            print(f"Price ID from Stripe: {price_id}")
+        except Exception as e:
+            print(f"ERROR in success view: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    context = {
+        'success': True,
+        'sub_status': sub_status,
+        'sub_plan': sub_plan,
+        'sub_amount': sub_amount,
+    }
+    # print(f"Context: {context}")
+    
+    return render(request, 'payment.html', context)
 
 def cancel(request):
     return render(request, 'payment.html', {'success': False})
