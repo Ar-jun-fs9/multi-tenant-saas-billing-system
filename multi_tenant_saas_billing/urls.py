@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
 from django.shortcuts import render
-from core.models import Subscription, Plan
+from core.models import Subscription, Plan, Organization
 
 def home(request):
     return render(request, 'homepage.html')
@@ -59,6 +59,21 @@ def success(request):
                         if db_plan:
                             sub_plan = db_plan.name
                             sub_amount = f"${db_plan.price:.2f}"
+                            try:
+                                customer_id = checkout_session.customer
+                                org = Organization.objects.filter(stripe_customer_id=customer_id).first()
+                                if org:
+                                    new_sub, created = Subscription.objects.update_or_create(
+                                        stripe_subscription_id=sub_id,
+                                        defaults={
+                                            'organization': org,
+                                            'plan': db_plan,
+                                            'status': 'active'
+                                        }
+                                    )
+                                    print(f"Subscription SAVED to DB: {new_sub.id}")
+                            except Exception as save_err:
+                                print(f"Could not save: {save_err}")
                             print(f"Found via Stripe: {db_plan.name}")
                         else:
                             print(f"Price ID from Stripe: {price_id}")
