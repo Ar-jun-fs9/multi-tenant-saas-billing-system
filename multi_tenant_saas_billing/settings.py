@@ -123,10 +123,14 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-
 # STATIC FILES
 STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "core/static",
+]
 
 # WhiteNoise (important for Render)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
