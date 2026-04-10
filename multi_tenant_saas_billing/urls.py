@@ -31,7 +31,7 @@ def cancel(request):
     return render(request, 'payment.html', {'success': False})
 
 urlpatterns = [
-    path('', include('core.urls')),
+    # path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
     path('', home, name='home'),
