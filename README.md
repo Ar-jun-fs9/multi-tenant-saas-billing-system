@@ -61,85 +61,49 @@ curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/token/ \
 
 ## Screenshots
 
-The following images show the Multi-Tenant SaaS Billing API in action.
+The following images show the Multi-Tenant SaaS Billing API in action from organization setup to active subscription.
 
-### Step 1: Create Organization
+### Step 1-2: Organization & User Registration
 
-- Register a new company/organization in the system:
-
-| ![organization1](assets/oragnization%20create_1.png) |
-| ------------------------------------------- |
-| Organization registration form               |
+| ![organization1](assets/oragnization%20create_1.png) | ![user_register](assets/user%20register_2.png) |
+| ------------------------------------------- | --------------------------------------- |
+| Create new organization              | Register user with role              |
 
 ---
 
-### Step 2: Register User
-
-- Create users and associate them with an organization:
-
-| ![user_register](assets/user%20register_2.png) |
-| --------------------------------------- |
-| User registration with role selection     |
-
----
-
-### Step 3: JWT Authentication
-
-- Login to get access and refresh tokens:
+### Step 3-4: Authentication & Plans
 
 | ![token](assets/token_3.png) | ![token_refresh](assets/token%20refresh_4.png) |
 | --------------------------- | -------------------------------------- |
-| Get JWT token               | Refresh token endpoint                 |
-
----
-
-### Step 4: View Subscription Plans
-
-- Browse available subscription plans:
+| Get JWT access token         | Refresh token endpoint          |
 
 | ![plans](assets/plans_5.png) |
 | -------------------------- |
-| List of subscription plans |
+| Browse subscription plans       |
 
 ---
 
-### Step 5: Subscribe to a Plan
+### Step 5-6: Subscribe & Payment
 
-- Create a Stripe checkout session for payment:
+| ![subscribe](assets/subscribe_6.png) | ![stripe](assets/stripe_7.png) |
+| ------------------------------ | ---------------------------- |
+| Create checkout session        | Stripe checkout page         |
 
-| ![subscribe](assets/subscribe_6.png) |
-| ------------------------------ |
-| Subscribe to a plan             |
-
----
-
-### Step 6: Stripe Payment Integration
-
-- Complete payment on Stripe's hosted checkout:
-
-| ![stripe](assets/stripe_7.png) | ![pay](assets/pay_8.png) |
-| ---------------------------- | ---------------------- |
-| Stripe checkout page           | Payment form          |
+| ![pay](assets/pay_8.png) |
+| ---------------------- |
+| Complete payment        |
 
 ---
 
-### Step 7: Payment Confirmation
-
-- View payment status in Stripe dashboard:
+### Step 7-8: Confirmation & Subscription
 
 | ![stripe_dashboard](assets/stripe_dashboard_9.png) | ![stripe_trans](assets/stripe_trans_10.png) |
 | -------------------------------------------- | ----------------------------------- |
-| Stripe transaction history              | Payment details                  |
-
----
-
-### Step 8: Active Subscription
-
-- Subscription is activated after successful payment:
+| Transaction history           | Payment details             |
 
 | ![subscription](assets/subscription_11.png) |
 | --------------------------------------- |
-| Active subscription status             |
+| Active subscription status               |
 
 ---
 
