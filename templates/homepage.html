@@ -43,8 +43,13 @@
       };
     </script>
     <style>
+      html {
+        overflow-x: hidden;
+      }
       body {
         font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+        max-width: 100vw;
       }
       .gradient-mesh {
         background:
@@ -67,46 +72,101 @@
       .glow {
         box-shadow: 0 4px 20px -3px rgba(14, 165, 233, 0.35);
       }
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 1.75rem !important;
+          line-height: 1.2;
+        }
+        .hero-text {
+          font-size: 0.9rem !important;
+        }
+        .stats-container {
+          gap: 1.5rem !important;
+        }
+        .stats-divider {
+          display: none;
+        }
+        nav {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+        }
+        .feature-card {
+          padding: 1rem !important;
+        }
+        .nav-menu {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          flex-direction: column;
+          padding: 1rem;
+          border-bottom: 1px solid #e5e7eb;
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .nav-menu.active {
+          display: flex;
+        }
+        .mobile-menu-btn {
+          display: block !important;
+        }
+        .code-block {
+          font-size: 0.65rem !important;
+          line-height: 1.4;
+          padding: 0.5rem !important;
+          white-space: pre-wrap !important;
+          word-break: break-all !important;
+        }
+      }
+      @media (min-width: 769px) {
+        .mobile-menu-btn {
+          display: none !important;
+        }
+      }
     </style>
   </head>
-  <body class="font-space bg-white text-slate-900 min-h-screen">
+  <body class="font-space bg-white text-slate-900 min-h-screen pt-16 md:pt-0">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 border-b border-gray-200">
-      <div class="max-w-7xl mx-auto px-6 py-4">
+    <nav class="fixed top-0 w-full z-50 border-b border-gray-200 bg-white">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-3">
             <div
-              class="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center"
+              class="w-8 h-8 md:w-10 bg-brand-500 rounded-lg flex items-center justify-center"
             >
-              <i class="fas fa-credit-card text-white"></i>
+              <i class="fas fa-credit-card text-white text-sm md:text-base"></i>
             </div>
             <div>
-              <h1 class="text-xl font-bold tracking-wide text-slate-900">
+              <h1 class="text-lg md:text-xl font-bold tracking-wide text-slate-900">
                 SaaS Billing
               </h1>
-              <p class="text-xs text-muted">Multi-Tenant API</p>
+              <p class="text-xs text-muted hidden md:block">Multi-Tenant API</p>
             </div>
           </div>
 
-          <div class="hidden md:flex items-center gap-8">
+          <div class="nav-menu md:flex items-center gap-6 lg:gap-8" id="navMenu">
             <a
               href="#features"
-              class="text-sm text-slate-600 hover:text-brand-500 transition"
+              class="text-sm text-slate-600 hover:text-brand-500 transition block py-2 md:py-0"
               >Features</a
             >
             <a
               href="#endpoints"
-              class="text-sm text-slate-600 hover:text-brand-500 transition"
+              class="text-sm text-slate-600 hover:text-brand-500 transition block py-2 md:py-0"
               >API</a
             >
             <a
               href="#test"
-              class="text-sm text-slate-600 hover:text-brand-500 transition"
+              class="text-sm text-slate-600 hover:text-brand-500 transition block py-2 md:py-0"
               >Testing</a
             >
           </div>
 
           <div class="flex items-center gap-4">
+            <button class="mobile-menu-btn text-slate-600" onclick="document.getElementById('navMenu').classList.toggle('active')">
+              <i class="fas fa-bars text-lg"></i>
+            </button>
             <a
               href="#test"
               class="text-brand-500 text-sm font-medium hover:text-brand-600 transition"
@@ -119,36 +179,36 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 overflow-hidden">
+    <section class="relative pt-24 md:pt-32 pb-12 md:pb-20 overflow-hidden">
       <div class="absolute inset-0 gradient-mesh bg-gray-50"></div>
 
-      <div class="relative max-w-5xl mx-auto px-6 text-center">
+      <div class="relative max-w-5xl mx-auto px-4 md:px-6 text-center">
         <h1
-          class="text-5xl md:text-6xl font-bold mb-6 leading-tight text-slate-900"
+          class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight text-slate-900 hero-title"
         >
           Multi-Tenant<br />
           <span class="text-brand-500">Billing System</span>
         </h1>
 
         <p
-          class="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed"
+          class="text-base md:text-lg lg:text-xl text-slate-600 max-w-2xl mx-auto mb-6 md:mb-10 leading-relaxed hero-text"
         >
           Complete subscription billing API for SaaS companies. Handle payments,
           manage organizations, and generate invoices — all with built-in
           multi-tenancy.
         </p>
 
-        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+        <div class="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-8 md:mb-16">
           <a
             href="#test"
-            class="inline-flex items-center justify-center bg-brand-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-brand-600 transition glow"
+            class="inline-flex items-center justify-center bg-brand-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold hover:bg-brand-600 transition glow text-sm md:text-base"
           >
             <i class="fas fa-play mr-2"></i>Test API
           </a>
           <a
             href="https://github.com/Ar-jun-fs9/multi-tenant-saas-billing-system"
             target="_blank"
-            class="inline-flex items-center justify-center bg-slate-100 border border-slate-200 text-slate-700 px-8 py-4 rounded-lg font-semibold hover:bg-slate-200 transition"
+            class="inline-flex items-center justify-center bg-slate-100 border border-slate-200 text-slate-700 px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold hover:bg-slate-200 transition text-sm md:text-base"
           >
             <i class="fab fa-github mr-2"></i>View Code
           </a>
@@ -156,25 +216,25 @@
 
         <!-- Stats -->
         <div
-          class="flex flex-wrap justify-center gap-10 pt-10 border-t border-gray-200"
+          class="flex flex-wrap justify-center gap-6 md:gap-10 pt-8 md:pt-10 border-t border-gray-200 stats-container"
         >
           <div class="text-center">
-            <div class="text-3xl font-bold text-brand-500">16+</div>
+            <div class="text-2xl md:text-3xl font-bold text-brand-500">16+</div>
             <div class="text-slate-500 text-sm">API Endpoints</div>
           </div>
-          <div class="w-px h-10 bg-gray-200"></div>
+          <div class="w-px h-8 md:h-10 bg-gray-200 stats-divider"></div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-brand-500">Stripe</div>
+            <div class="text-2xl md:text-3xl font-bold text-brand-500">Stripe</div>
             <div class="text-slate-500 text-sm">Integrated</div>
           </div>
-          <div class="w-px h-10 bg-gray-200"></div>
+          <div class="w-px h-8 md:h-10 bg-gray-200 stats-divider"></div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-brand-500">JWT</div>
+            <div class="text-2xl md:text-3xl font-bold text-brand-500">JWT</div>
             <div class="text-slate-500 text-sm">Auth</div>
           </div>
-          <div class="w-px h-10 bg-gray-200"></div>
+          <div class="w-px h-8 md:h-10 bg-gray-200 stats-divider"></div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-brand-500">PDF</div>
+            <div class="text-2xl md:text-3xl font-bold text-brand-500">PDF</div>
             <div class="text-slate-500 text-sm">Invoices</div>
           </div>
         </div>
@@ -182,18 +242,18 @@
     </section>
 
     <!-- Features -->
-    <section id="features" class="py-20 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
+    <section id="features" class="py-12 md:py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="text-center mb-10 md:mb-16">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 text-slate-900">
             Core Features
           </h2>
-          <p class="text-slate-600">Everything you need for SaaS billing</p>
+          <p class="text-slate-600 text-sm md:text-base">Everything you need for SaaS billing</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <div
-            class="bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-lg transition"
+            class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 hover:border-brand-300 hover:shadow-lg transition feature-card"
           >
             <div
               class="w-12 h-12 bg-brand-50 rounded-lg flex items-center justify-center mb-4"
@@ -296,13 +356,13 @@
     </section>
 
     <!-- API Endpoints -->
-    <section id="endpoints" class="py-20">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
+    <section id="endpoints" class="py-12 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="text-center mb-10 md:mb-16">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 text-slate-900">
             API Endpoints
           </h2>
-          <p class="text-slate-600">
+          <p class="text-slate-600 text-sm md:text-base">
             RESTful endpoints for full billing control
           </p>
         </div>
@@ -625,20 +685,20 @@
     </section>
 
     <!-- Testing -->
-    <section id="test" class="py-20 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
+    <section id="test" class="py-12 md:py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="text-center mb-10 md:mb-16">
+          <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 text-slate-900">
             Testing the API
           </h2>
-          <p class="text-slate-600">
+          <p class="text-slate-600 text-sm md:text-base">
             Use Postman or curl to test all endpoints
           </p>
         </div>
 
         <!-- Quick Test -->
-        <div class="grid md:grid-cols-2 gap-8 mb-12">
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
+          <div class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-4">
               <div
                 class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center"
@@ -648,12 +708,12 @@
               <h3 class="text-lg font-semibold text-slate-900">Quick Test</h3>
             </div>
             <div
-              class="bg-gray-50 rounded-lg p-4 mb-4 font-mono text-sm text-brand-600"
+              class="code-block bg-gray-50 rounded-lg p-3 md:p-4 mb-4 font-mono text-xs md:text-sm text-brand-600"
             >
-              # Test organization registration<br />
-              curl -X POST http://localhost:8000/api/organization/register/ \<br />
-              &nbsp;&nbsp;-H "Content-Type: application/json" \<br />
-              &nbsp;&nbsp;-d '{"name": "My Company"}'
+# Test organization registration
+curl -X POST http://localhost:8000/api/organization/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Company"}'
             </div>
             <a
               href="http://localhost:8000/"
@@ -736,10 +796,10 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 bg-gray-50 border-t border-gray-200">
-      <div class="max-w-7xl mx-auto px-6">
+    <footer class="py-8 md:py-12 bg-gray-50 border-t border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div
-          class="flex flex-col md:flex-row justify-between items-center gap-6"
+          class="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 text-center md:text-left"
         >
           <div class="flex items-center gap-3">
             <div
@@ -748,18 +808,18 @@
               <i class="fas fa-credit-card text-white text-sm"></i>
             </div>
             <div>
-              <h1 class="font-bold text-slate-900">SaaS Billing API</h1>
+              <h1 class="font-bold text-slate-900 text-sm md:text-base">SaaS Billing API</h1>
               <p class="text-xs text-slate-500">Multi-Tenant</p>
             </div>
           </div>
 
-          <div class="flex items-center gap-6 text-sm text-slate-600">
-            <a href="https://github.com/Ar-jun-fs9/multi-tenant-saas-billing-system/blob/main/test_cases.md" class="hover:text-brand-500 transition"
+          <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm text-slate-600">
+            <a href="test_cases.md" class="hover:text-brand-500 transition"
               >Test Cases</a
             >
-            <a href="https://github.com/Ar-jun-fs9/multi-tenant-saas-billing-system/blob/main/README.md" class="hover:text-brand-500 transition">Docs</a>
+            <a href="README.md" class="hover:text-brand-500 transition">Docs</a>
             <a
-              href="https://github.com/Ar-jun-fs9/"
+              href="projectdiscussion.md"
               class="hover:text-brand-500 transition"
               >Discussion</a
             >
@@ -767,7 +827,7 @@
 
           <div class="flex gap-2">
             <span class="px-2 py-1 bg-gray-100 text-xs rounded text-slate-600"
-              >Django</span
+              >Django</span>
             >
             <span class="px-2 py-1 bg-gray-100 text-xs rounded text-slate-600"
               >DRF</span
