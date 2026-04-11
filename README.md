@@ -27,7 +27,178 @@
 
 A stable and reliable Django REST API for multi-tenant SaaS subscription billing with Stripe integration.
 
-## Overview
+**[Live Demo](https://multi-tenant-saas-billing-system.onrender.com/)** · **[Local Development](#local-setup)** · **[API Documentation](#api-endpoints)** · **[Testing](#testing)**
+
+---
+
+## Quick Start
+
+### Live Demo (No Setup Required)
+
+| Deployment | URL                                         | Description                    |
+| ---------- | ------------------------------------------- | ---------------------------- |
+| **Render** | https://multi-tenant-saas-billing-system.onrender.com/ | Live production deployment     |
+| **Local**  | http://127.0.0.1:8000/                      | Local development server    |
+
+```bash
+# Test the live API - Create organization
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/organization/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Company"}'
+
+# Register user
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/user/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user", "password": "pass", "email": "user@test.com", "organization": 1}'
+
+# Get JWT token
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user", "password": "pass"}'
+```
+
+---
+
+## Screenshots
+
+The following images show the Multi-Tenant SaaS Billing API in action.
+
+### Step 1: Create Organization
+
+- Register a new company/organization in the system:
+
+| ![organization1](assets/oragnization%20create_1.png) |
+| ------------------------------------------- |
+| Organization registration form               |
+
+---
+
+### Step 2: Register User
+
+- Create users and associate them with an organization:
+
+| ![user_register](assets/user%20register_2.png) |
+| --------------------------------------- |
+| User registration with role selection     |
+
+---
+
+### Step 3: JWT Authentication
+
+- Login to get access and refresh tokens:
+
+| ![token](assets/token_3.png) | ![token_refresh](assets/token%20refresh_4.png) |
+| --------------------------- | -------------------------------------- |
+| Get JWT token               | Refresh token endpoint                 |
+
+---
+
+### Step 4: View Subscription Plans
+
+- Browse available subscription plans:
+
+| ![plans](assets/plans_5.png) |
+| -------------------------- |
+| List of subscription plans |
+
+---
+
+### Step 5: Subscribe to a Plan
+
+- Create a Stripe checkout session for payment:
+
+| ![subscribe](assets/subscribe_6.png) |
+| ------------------------------ |
+| Subscribe to a plan             |
+
+---
+
+### Step 6: Stripe Payment Integration
+
+- Complete payment on Stripe's hosted checkout:
+
+| ![stripe](assets/stripe_7.png) | ![pay](assets/pay_8.png) |
+| ---------------------------- | ---------------------- |
+| Stripe checkout page           | Payment form          |
+
+---
+
+### Step 7: Payment Confirmation
+
+- View payment status in Stripe dashboard:
+
+| ![stripe_dashboard](assets/stripe_dashboard_9.png) | ![stripe_trans](assets/stripe_trans_10.png) |
+| -------------------------------------------- | ----------------------------------- |
+| Stripe transaction history              | Payment details                  |
+
+---
+
+### Step 8: Active Subscription
+
+- Subscription is activated after successful payment:
+
+| ![subscription](assets/subscription_11.png) |
+| --------------------------------------- |
+| Active subscription status             |
+
+---
+
+## Live Demo vs Local
+
+### Available Deployments
+
+| Environment       | Base URL                                   | Best For                                |
+| ----------------- | ------------------------------------------ | --------------------------------------- |
+| **Render (Live)** | https://multi-tenant-saas-billing-system.onrender.com | Quick testing, demos, sharing with team |
+| **Localhost**     | http://127.0.0.1:8000                      | Development, debugging, custom changes  |
+
+### Testing Each Version
+
+**Live Demo (Render):**
+
+```bash
+# Create organization
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/organization/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Company"}'
+
+# Register user
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/user/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user", "password": "pass", "organization": 1}'
+
+# Get token
+curl -X POST https://multi-tenant-saas-billing-system.onrender.com/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user", "password": "pass"}'
+
+# List plans
+curl -X GET https://multi-tenant-saas-billing-system.onrender.com/api/plans/
+```
+
+**Local Development:**
+
+```bash
+# Start server
+python manage.py runserver
+
+# Create organization
+curl -X POST http://127.0.0.1:8000/api/organization/register/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Company"}'
+
+# Access admin
+http://127.0.0.1:8000/admin
+```
+
+### When to Use Which?
+
+- **Use Live Demo when:** You want to quickly test the API without any setup, share with teammates, or integrate with external services
+- **Use Local when:** You need to modify code, debug issues, add features, or test with your own database
+
+---
+
+## What is this project?
 
 This project provides a complete billing solution for SaaS companies to manage subscriptions, organizations, and payments. Built with Django REST Framework and Stripe, it handles the entire billing lifecycle from organization registration to invoice generation.
 
