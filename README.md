@@ -23,11 +23,13 @@
   </a>
 </p>
 
-</div>
+
 
 A stable and reliable Django REST API for multi-tenant SaaS subscription billing with Stripe integration.
 
 **[Live Demo](https://multi-tenant-saas-billing-system.onrender.com/)** · **[Local Development](#local-setup)** · **[API Documentation](#api-endpoints)** · **[Testing](#testing)**
+
+</div>
 
 ---
 
